@@ -98,42 +98,44 @@ class _LoginPageState extends State<LoginPage> {
                       child: const Text("SIgnUp")),
                   MaterialButton(
                     color: Colors.blue,
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save();
-                        try {
-                          setState(() {
-                            loading = true;
-                          });
-                          await widget.auth.signInWithEmailAndPassword(
-                              email: _email!, password: _password!);
-                          setState(() {
-                            loading = false;
-                          });
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const HomePage()),
-                            (route) => false,
-                          );
-                        } on FirebaseAuthException catch (e) {
-                          setState(() {
-                            loading = false;
-                          });
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(e.message.toString())),
-                          );
-                          log(e.message.toString() + " mag");
-                        } catch (e) {
-                          setState(() {
-                            loading = false;
-                          });
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(e.toString())),
-                          );
-                        }
-                      }
-                    },
+                    onPressed: loading
+                        ? null
+                        : () async {
+                            if (_formKey.currentState!.validate()) {
+                              _formKey.currentState!.save();
+                              try {
+                                setState(() {
+                                  loading = true;
+                                });
+                                await widget.auth.signInWithEmailAndPassword(
+                                    email: _email!, password: _password!);
+                                setState(() {
+                                  loading = false;
+                                });
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const HomePage()),
+                                  (route) => false,
+                                );
+                              } on FirebaseAuthException catch (e) {
+                                setState(() {
+                                  loading = false;
+                                });
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(e.message.toString())),
+                                );
+                                log(e.message.toString() + " mag");
+                              } catch (e) {
+                                setState(() {
+                                  loading = false;
+                                });
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(e.toString())),
+                                );
+                              }
+                            }
+                          },
                     child: const Text(
                       'Login',
                       style: TextStyle(color: Colors.white),
